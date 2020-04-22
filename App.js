@@ -8,9 +8,13 @@ import {
   StyleSheet, 
   Text, 
   TouchableHighlight, 
-  View 
+  View,
+  Linking,
+  Button
 } from 'react-native';
 import PropTypes from 'prop-types';
+
+import Modal from 'react-native-modal';
 
 
 class SelectedCheckboxes {
@@ -28,7 +32,7 @@ class SelectedCheckboxes {
 }
 
 class Checkbox extends Component {
-
+ 
   constructor() {
     super();
     this.state = { 
@@ -97,6 +101,7 @@ class Checkbox extends Component {
           <Text style={[styles.checkboxLabel, { color: this.props.labelColor }]}>
             {this.props.label}
           </Text>
+          
         </View>
 
       </TouchableHighlight>
@@ -105,7 +110,21 @@ class Checkbox extends Component {
 }
 
 export default class App extends Component {
- 
+  state = {
+    isVisible: false,  
+  }
+  toggleModal = () => {
+    this.setState({isModalVisible: !this.state.isModalVisible});
+    // if (CheckedArrObject.fetchArray().length == 0) {
+    //   Alert.alert('No Item Selected');
+    // } else {
+    //   this.setState(() => {
+    //     return {
+    //       pickedElements: CheckedArrObject.fetchArray().map(res => res.value).join()
+    //     }
+    //   });
+    // }
+  };
   constructor() {
     super();
     CheckedArrObject = new SelectedCheckboxes();
@@ -126,21 +145,34 @@ export default class App extends Component {
 
   render() {
     return (
-      <View style={styles.CheckboxContainer}>
+      
+      <View style={styles.container}>
         
-        <Checkbox size={45}
+        <Checkbox size={25}
           keyValue={1}
-          checked={false}
+          checked={this.state.checked}
           color="#3F50B5"
           labelColor="#000000"
-          label="Little Women"
-          value="little_women" 
+          label=""
+          value=""  
           checkedObjArr={CheckedArrObject} />
- 
-        <TouchableHighlight style={styles.showSelectedButton} onPress={this.renderSelectedElements}>
-          <Text style={styles.buttonText}>Checked Items</Text>
-        </TouchableHighlight>
-        <Text style={{ fontSize: 22, color: "#000", marginTop: 25 }}> {this.state.pickedElements} </Text>
+          
+        <Text style={{ fontSize: 22, color: "#000", marginTop: 25 }} onPress={this.renderSelectedElements}> Accept 
+         </Text>
+         <Button title="Term & Condition" onPress={this.toggleModal} />
+        <Text style={{ fontSize: 22, color: "#000", marginTop: 25 }}>from AffinBank </Text>
+        
+        <View style={styles.CheckboxContainer}>
+        
+        <Modal isVisible={this.state.isModalVisible}>
+          <View style={styles.CheckboxContainer}>
+            <Text>Hello!</Text>
+            <Text>Agree the policy</Text>
+            <Button title="I read" onPress={this.toggleModal} />
+          </View>
+        </Modal>
+      </View>
+
       </View>
     );
   }
@@ -166,8 +198,25 @@ Checkbox.defaultProps = {
     labelColor: '000000',    
 }
 
-const styles = StyleSheet.create(
+const styles = StyleSheet.create( 
   {
+    container: {
+      flex: 1,
+      padding: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingTop: (Platform.OS === 'ios') ? 50 : 0
+    },
+     modal: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: '#000000',
+        padding: 100
+     },
+     text: {
+        color: '#3f2949',
+        marginTop: 10
+     },
     CheckboxContainer: {
       flex: 1,
       padding: 22,
